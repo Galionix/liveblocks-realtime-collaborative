@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useMutation, useStorage, useUpdateMyPresence } from '../lib/liveblocks';
+import { TextCursors } from './TextCursors';
 
 export function CollaborativeEditor() {
   const updateMyPresence = useUpdateMyPresence();
@@ -40,6 +41,22 @@ export function CollaborativeEditor() {
     return () => clearTimeout(timer);
   }, [updateMyPresence]);
 
+  // Handle cursor position changes
+  const handleSelectionChange = useCallback(() => {
+    if (textareaRef.current) {
+      const cursorPosition = textareaRef.current.selectionStart;
+      const selectionEnd = textareaRef.current.selectionEnd;
+      
+      updateMyPresence({
+        textCursor: {
+          position: cursorPosition,
+          selection: cursorPosition !== selectionEnd ? 
+            { start: cursorPosition, end: selectionEnd } : undefined
+        }
+      });
+    }
+  }, [updateMyPresence]);
+
   useEffect(() => {
     // Set initial text if not exists
     if (text === undefined) {
@@ -58,17 +75,20 @@ export function CollaborativeEditor() {
         </p>
       </div>
 
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 relative">
         <textarea
           ref={textareaRef}
           value={text || ""}
           onChange={handleTextChange}
           onKeyDown={handleKeyDown}
           onKeyUp={handleKeyUp}
+          onSelect={handleSelectionChange}
+          onClick={handleSelectionChange}
           className="w-full h-full p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm bg-white text-gray-900 min-h-96"
           placeholder="Start typing your document here..."
           spellCheck="false"
         />
+        <TextCursors textareaRef={textareaRef} text={text || ""} />
       </div>
 
       <TypingIndicators />

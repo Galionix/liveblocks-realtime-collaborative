@@ -59,7 +59,7 @@ function CollaborativeApp() {
             </div>
             <div className="p-3 bg-green-50 rounded-lg">
               <h4 className="font-medium text-green-800 mb-1">✏️ Collaborative Editing</h4>
-              <p>Type in the editor to see real-time text synchronization</p>
+              <p>Type in the editor to see real-time text and cursor synchronization</p>
             </div>
             <div className="p-3 bg-yellow-50 rounded-lg">
               <h4 className="font-medium text-yellow-800 mb-1">💬 Live Comments</h4>
@@ -98,6 +98,7 @@ export default function Home() {
       id="collaborative-demo-room"
       initialPresence={{
         cursor: null,
+        textCursor: null,
         isTyping: false,
       }}
       initialStorage={{

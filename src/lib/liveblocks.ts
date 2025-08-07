@@ -9,6 +9,7 @@ const client = createClient({
 // Define presence and storage types
 type Presence = {
   cursor: { x: number; y: number } | null;
+  textCursor: { position: number; selection?: { start: number; end: number } } | null;
   isTyping: boolean;
   user?: {
     name: string;
