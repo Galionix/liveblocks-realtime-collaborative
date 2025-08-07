@@ -46,11 +46,11 @@ export function CollaborativeEditor() {
     if (textareaRef.current) {
       const cursorPosition = textareaRef.current.selectionStart;
       const selectionEnd = textareaRef.current.selectionEnd;
-      
+
       updateMyPresence({
         textCursor: {
           position: cursorPosition,
-          selection: cursorPosition !== selectionEnd ? 
+          selection: cursorPosition !== selectionEnd ?
             { start: cursorPosition, end: selectionEnd } : undefined
         }
       });

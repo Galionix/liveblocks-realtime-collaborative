@@ -1,7 +1,8 @@
 "use client";
 
-import { useOthers } from "../lib/liveblocks";
-import { useMemo, useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from 'react';
+
+import { useOthers } from '../lib/liveblocks';
 
 interface TextCursorsProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -14,17 +15,17 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
 
   // Listen for scroll events
   const textareaElement = textareaRef.current;
-  
+
   useEffect(() => {
     if (!textareaElement) return;
-    
+
     const handleScroll = () => {
       setScrollState({
         scrollTop: textareaElement.scrollTop,
         scrollLeft: textareaElement.scrollLeft,
       });
     };
-    
+
     textareaElement.addEventListener('scroll', handleScroll);
     return () => textareaElement.removeEventListener('scroll', handleScroll);
   }, [textareaElement]);
@@ -37,10 +38,10 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
       .map((other) => {
         const textCursor = other.presence.textCursor!;
         const user = other.presence.user!;
-        
+
         // Calculate cursor position in textarea
         const position = getTextareaCoordinates(textareaRef.current!, textCursor.position, text);
-        
+
         return {
           ...position,
           user,
@@ -51,14 +52,14 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
       .filter((cursor) => {
         // Check if cursor is visible within textarea bounds
         if (!textareaRef.current) return false;
-        
+
         const textareaRect = textareaRef.current.getBoundingClientRect();
-        const isVisible = 
-          cursor.x! >= textareaRect.left && 
+        const isVisible =
+          cursor.x! >= textareaRect.left &&
           cursor.x! <= textareaRect.right &&
-          cursor.y! >= textareaRect.top && 
+          cursor.y! >= textareaRect.top &&
           cursor.y! <= textareaRect.bottom;
-          
+
         return isVisible;
       });
   }, [others, textareaRef, text, scrollState]); // добавляем scrollState в зависимости
@@ -121,36 +122,36 @@ function getTextareaCoordinates(
     const computedStyle = window.getComputedStyle(textarea);
     const paddingLeft = parseFloat(computedStyle.paddingLeft);
     const paddingTop = parseFloat(computedStyle.paddingTop);
-    
+
     // Get scroll position
     const scrollTop = textarea.scrollTop;
     const scrollLeft = textarea.scrollLeft;
-    
+
     // Get text up to cursor position
     const textBeforeCursor = text.substring(0, cursorPosition);
     const lines = textBeforeCursor.split('\n');
     const currentLineIndex = lines.length - 1;
     const currentLineText = lines[currentLineIndex];
-    
+
     // Calculate line height
     const fontSize = parseFloat(computedStyle.fontSize);
     const lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.2;
-    
+
     // Calculate Y position (line number * line height) - scroll offset
     const y = textareaRect.top + paddingTop + (currentLineIndex * lineHeight) - scrollTop;
-    
+
     // Calculate X position using canvas for accurate text measurement
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) return { x: null, y: null };
-    
+
     // Set font to match textarea
     ctx.font = `${computedStyle.fontWeight} ${computedStyle.fontSize} ${computedStyle.fontFamily}`;
-    
+
     // Measure width of current line text
     const textWidth = ctx.measureText(currentLineText).width;
     const x = textareaRect.left + paddingLeft + textWidth - scrollLeft;
-    
+
     return { x, y };
   } catch (error) {
     console.error('Error calculating cursor position:', error);
