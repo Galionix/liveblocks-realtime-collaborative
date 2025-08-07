@@ -33,22 +33,22 @@ export function UserPresence() {
   }, [myPresence, othersPresence]);
 
   return (
-    <div className="fixed top-4 right-4 flex space-x-2 z-40">
+    <div className="flex space-x-2">
       {users.map((user, index) => (
         <div
           key={index}
-          className={`flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium text-white ${
+          className={`flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-medium text-white ${
             user.isMe ? "ring-2 ring-white" : "ring-green-500"
           }`}
           style={{ backgroundColor: user.color }}
         >
-          <div className="w-2 h-2 bg-white rounded-full" />
+          <div className="w-1.5 h-1.5 bg-white rounded-full" />
           <span>{user.name}</span>
           {user.isMe && <span className="text-xs opacity-75">(You)</span>}
         </div>
       ))}
       {users.length === 0 && (
-        <div className="px-3 py-2 bg-gray-500 text-white text-sm rounded-full">
+        <div className="px-3 py-1 bg-gray-500 text-white text-xs rounded-full">
           No users online
         </div>
       )}

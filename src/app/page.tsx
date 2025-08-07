@@ -34,10 +34,13 @@ function CollaborativeApp() {
               Real-time collaboration with live cursors, presence, and comments
             </p>
           </div>
-          <div className="text-sm text-gray-500">
-            You are: <span className="font-medium" style={{ color: user.color }}>
-              {user.name}
-            </span>
+          <div className="flex items-center space-x-4">
+            <div className="text-sm text-gray-500">
+              You are: <span className="font-medium" style={{ color: user.color }}>
+                {user.name}
+              </span>
+            </div>
+            <UserPresence />
           </div>
         </div>
       </header>
@@ -87,7 +90,6 @@ function CollaborativeApp() {
       {/* Live features */}
       <LiveCursors />
       <LiveComments />
-      <UserPresence />
     </div>
   );
 }
