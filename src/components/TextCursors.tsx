@@ -137,7 +137,7 @@ function getTextareaCoordinates(
     const fontSize = parseFloat(computedStyle.fontSize);
     const lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.2;
 
-    // Calculate Y position (line number * line height) - scroll offset
+    // Calculate Y position (line number * line height) - scroll offset + half line height for vertical centering
     const y = textareaRect.top + paddingTop + (currentLineIndex * lineHeight) - scrollTop;
 
     // Calculate X position using canvas for accurate text measurement

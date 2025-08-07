@@ -46,7 +46,7 @@ function CollaborativeApp() {
       </header>
 
       {/* Main content */}
-      <main className="h-[calc(100vh-80px)] flex">
+      <main className="h-[calc(100vh-200px)] flex">
         {/* Editor */}
         <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200">
           <CollaborativeEditor />
