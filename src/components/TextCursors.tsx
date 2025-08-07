@@ -1,7 +1,7 @@
 "use client";
 
 import { useOthers } from "../lib/liveblocks";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 interface TextCursorsProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -10,6 +10,24 @@ interface TextCursorsProps {
 
 export function TextCursors({ textareaRef, text }: TextCursorsProps) {
   const others = useOthers();
+  const [scrollState, setScrollState] = useState({ scrollTop: 0, scrollLeft: 0 });
+
+  // Listen for scroll events
+  const textareaElement = textareaRef.current;
+  
+  useEffect(() => {
+    if (!textareaElement) return;
+    
+    const handleScroll = () => {
+      setScrollState({
+        scrollTop: textareaElement.scrollTop,
+        scrollLeft: textareaElement.scrollLeft,
+      });
+    };
+    
+    textareaElement.addEventListener('scroll', handleScroll);
+    return () => textareaElement.removeEventListener('scroll', handleScroll);
+  }, [textareaElement]);
 
   const textCursors = useMemo(() => {
     if (!textareaRef.current || !text) return [];
@@ -29,8 +47,21 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
           connectionId: other.connectionId,
         };
       })
-      .filter((cursor) => cursor.x !== null && cursor.y !== null);
-  }, [others, textareaRef, text]);
+      .filter((cursor) => cursor.x !== null && cursor.y !== null)
+      .filter((cursor) => {
+        // Check if cursor is visible within textarea bounds
+        if (!textareaRef.current) return false;
+        
+        const textareaRect = textareaRef.current.getBoundingClientRect();
+        const isVisible = 
+          cursor.x! >= textareaRect.left && 
+          cursor.x! <= textareaRect.right &&
+          cursor.y! >= textareaRect.top && 
+          cursor.y! <= textareaRect.bottom;
+          
+        return isVisible;
+      });
+  }, [others, textareaRef, text, scrollState]); // добавляем scrollState в зависимости
 
   return (
     <>
@@ -91,6 +122,10 @@ function getTextareaCoordinates(
     const paddingLeft = parseFloat(computedStyle.paddingLeft);
     const paddingTop = parseFloat(computedStyle.paddingTop);
     
+    // Get scroll position
+    const scrollTop = textarea.scrollTop;
+    const scrollLeft = textarea.scrollLeft;
+    
     // Get text up to cursor position
     const textBeforeCursor = text.substring(0, cursorPosition);
     const lines = textBeforeCursor.split('\n');
@@ -101,8 +136,8 @@ function getTextareaCoordinates(
     const fontSize = parseFloat(computedStyle.fontSize);
     const lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.2;
     
-    // Calculate Y position (line number * line height)
-    const y = textareaRect.top + paddingTop + (currentLineIndex * lineHeight);
+    // Calculate Y position (line number * line height) - scroll offset
+    const y = textareaRect.top + paddingTop + (currentLineIndex * lineHeight) - scrollTop;
     
     // Calculate X position using canvas for accurate text measurement
     const canvas = document.createElement('canvas');
@@ -114,7 +149,7 @@ function getTextareaCoordinates(
     
     // Measure width of current line text
     const textWidth = ctx.measureText(currentLineText).width;
-    const x = textareaRect.left + paddingLeft + textWidth;
+    const x = textareaRect.left + paddingLeft + textWidth - scrollLeft;
     
     return { x, y };
   } catch (error) {
