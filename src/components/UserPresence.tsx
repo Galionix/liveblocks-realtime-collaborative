@@ -38,7 +38,7 @@ export function UserPresence() {
         <div
           key={index}
           className={`flex items-center space-x-2 px-3 py-2 rounded-full text-sm font-medium text-white ${
-            user.isMe ? "ring-2 ring-white" : ""
+            user.isMe ? "ring-2 ring-white" : "ring-green-500"
           }`}
           style={{ backgroundColor: user.color }}
         >

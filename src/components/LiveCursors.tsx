@@ -35,57 +35,48 @@ export function LiveCursors() {
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
-      // Only track cursor within viewport bounds
-      const cursor = { 
-        x: Math.max(0, Math.min(e.clientX, window.innerWidth - 50)), 
-        y: Math.max(0, Math.min(e.clientY, window.innerHeight - 50))
-      };
+      const cursor = { x: e.clientX, y: e.clientY };
       setLocalCursor(cursor);
       updateMyPresence({ cursor });
     };
 
-    const handlePointerLeave = (e: PointerEvent) => {
-      // Only hide cursor if actually leaving the window
-      if (e.clientX < 0 || e.clientX > window.innerWidth || 
-          e.clientY < 0 || e.clientY > window.innerHeight) {
-        setLocalCursor(null);
-        updateMyPresence({ cursor: null });
-      }
+    const handlePointerLeave = () => {
+      setLocalCursor(null);
+      updateMyPresence({ cursor: null });
     };
 
-    // Use window instead of document for better control
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerleave", handlePointerLeave);
+    document.addEventListener("pointermove", handlePointerMove);
+    document.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerleave", handlePointerLeave);
+      document.removeEventListener("pointermove", handlePointerMove);
+      document.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, [updateMyPresence]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-50">
+    <>
       {cursors.map(({ x, y, user }, index) => (
         <Cursor key={index} x={x} y={y} user={user} />
       ))}
-    </div>
+    </>
   );
 }
 
 function Cursor({ x, y, user }: Cursor) {
   return (
     <div
-      className="pointer-events-none absolute transition-all duration-75"
+      className="pointer-events-none fixed z-50 transition-transform duration-100"
       style={{
-        left: Math.max(0, Math.min(x, window.innerWidth - 200)),
-        top: Math.max(0, Math.min(y, window.innerHeight - 100)),
+        left: x,
+        top: y,
       }}
     >
       {/* Cursor pointer */}
       <svg
         className="relative"
-        width="20"
-        height="20"
+        width="24"
+        height="36"
         viewBox="0 0 24 36"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +90,7 @@ function Cursor({ x, y, user }: Cursor) {
       </svg>
       {/* User name label */}
       <div
-        className="absolute top-5 left-2 px-2 py-1 text-xs text-white rounded-md whitespace-nowrap shadow-lg"
+        className="absolute top-5 left-2 px-2 py-1 text-xs text-white rounded-md whitespace-nowrap"
         style={{ backgroundColor: user.color }}
       >
         {user.name}

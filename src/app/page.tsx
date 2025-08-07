@@ -22,9 +22,9 @@ function CollaborativeApp() {
   }, [updateMyPresence, user]);
 
   return (
-    <div className="h-screen bg-gray-100 overflow-hidden">
+    <div className="h-screen bg-gray-100">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex-shrink-0">
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
@@ -43,14 +43,14 @@ function CollaborativeApp() {
       </header>
 
       {/* Main content */}
-      <main className="flex-1 flex overflow-hidden">
+      <main className="h-[calc(100vh-80px)] flex">
         {/* Editor */}
-        <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200">
           <CollaborativeEditor />
         </div>
 
         {/* Sidebar */}
-        <div className="w-80 bg-white m-4 ml-0 rounded-lg shadow-sm border border-gray-200 p-4 overflow-y-auto flex-shrink-0">
+        <div className="w-80 bg-white m-4 ml-0 rounded-lg shadow-sm border border-gray-200 p-4">
           <h3 className="font-semibold text-gray-800 mb-4">Features Demo</h3>
           <div className="space-y-4 text-sm text-gray-600">
             <div className="p-3 bg-blue-50 rounded-lg">

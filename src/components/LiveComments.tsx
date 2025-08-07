@@ -78,7 +78,7 @@ export function LiveComments() {
 
   return (
     <div
-      className="fixed inset-0 pointer-events-none z-30"
+      className="fixed inset-0 pointer-events-none"
       onDoubleClick={handleDoubleClick}
       style={{ pointerEvents: isAddingComment ? "auto" : "none" }}
     >
