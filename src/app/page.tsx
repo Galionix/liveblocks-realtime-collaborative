@@ -65,12 +65,16 @@ function CollaborativeApp() {
               <p>Type in the editor to see real-time text and cursor synchronization</p>
             </div>
             <div className="p-3 bg-yellow-50 rounded-lg">
-              <h4 className="font-medium text-yellow-800 mb-1">💬 Live Comments</h4>
-              <p>Double-click anywhere to add comments with threaded replies</p>
+              <h4 className="font-medium text-yellow-800 mb-1">💬 Text Comments</h4>
+              <p>Double-click on any text in the editor to comment on it with threaded replies</p>
             </div>
             <div className="p-3 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-800 mb-1">👥 User Presence</h4>
-              <p>See who's online in the top-right corner</p>
+              <h4 className="font-medium text-purple-800 mb-1">�️ Live Comments</h4>
+              <p>Double-click anywhere outside text to add general comments</p>
+            </div>
+            <div className="p-3 bg-indigo-50 rounded-lg">
+              <h4 className="font-medium text-indigo-800 mb-1">�👥 User Presence</h4>
+              <p>See who's online in the header</p>
             </div>
           </div>
 
