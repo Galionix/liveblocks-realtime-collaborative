@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useMutation, useStorage, useUpdateMyPresence } from '../lib/liveblocks';
 import { generateId } from '../lib/utils';
-import { TextCursors } from './TextCursors';
-import { Comment } from './LiveComments';
 import { TextComments } from './TextComments';
+import { TextCursors } from './cursors';
+import { Comment } from './shared';
 
 export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: HTMLTextAreaElement | null) => void }) {
   const updateMyPresence = useUpdateMyPresence();
@@ -139,7 +139,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
   const handleAddComment = useCallback(() => {
     if (!commentText.trim() || !commentData) return;
 
-    const comment = {
+    const comment: Comment = {
       id: generateId(),
       text: commentText.trim(),
       author: currentUser,
