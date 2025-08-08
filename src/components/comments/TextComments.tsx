@@ -3,7 +3,9 @@ import { useMutation, useStorage } from '../../lib/liveblocks';
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { Reply, Comment } from '../shared/types';
 
-export const TextComments = ({ textareaRef }: { textareaRef: React.RefObject<HTMLTextAreaElement | null> }) => {
+export const TextComments = ({ textareaRef, removeTextComment }: {
+  removeTextComment: (commentId: string) => void;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null> }) => {
   const comments = useStorage((root) => root.comments);
   const text = useStorage((root) => root.text) || "";
   const [expandedComment, setExpandedComment] = useState<string | null>(null);
@@ -197,6 +199,14 @@ export const TextComments = ({ textareaRef }: { textareaRef: React.RefObject<HTM
                     rows={2}
                   />
                   <div className="flex justify-end space-x-2 mt-1">
+                    <button
+                      onClick={() => {
+                        removeTextComment(comment.id);
+                        setExpandedComment(null);}}
+                      className="px-2 py-1 text-xs text-gray-600 hover:text-gray-800"
+                    >
+                      Delete
+                    </button>
                     <button
                       onClick={() => setExpandedComment(null)}
                       className="px-2 py-1 text-xs text-gray-600 hover:text-gray-800"

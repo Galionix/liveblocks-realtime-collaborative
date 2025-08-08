@@ -33,6 +33,12 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
     commentsMap[comment.id] = comment;
     storage.set("comments", commentsMap);
   }, []);
+  // Handle remove comment
+  const removeTextComment = useMutation(({ storage }, commentId: string) => {
+    const commentsMap = storage.get("comments") || {};
+    delete commentsMap[commentId];
+    storage.set("comments", commentsMap);
+  }, []);
 
   const handleTextChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = e.target.value;
@@ -201,7 +207,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
         )}
       </div>
 
-      <TextComments textareaRef={textareaRef} />
+      <TextComments textareaRef={textareaRef} removeTextComment={removeTextComment} />
       {/* <TypingIndicators /> */}
     </div>
   );

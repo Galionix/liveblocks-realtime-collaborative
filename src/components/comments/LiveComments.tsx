@@ -45,6 +45,7 @@ export function LiveComments({ textareaRef }: LiveCommentsProps = {}) {
     storage.set("comments", commentsMap);
   }, []);
 
+
   // Mutation to add a reply to a comment
   const addReply = useMutation(({ storage }, commentId: string, reply: Reply) => {
     const commentsMap = storage.get("comments") || {};
