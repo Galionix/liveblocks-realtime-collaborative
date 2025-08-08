@@ -1,4 +1,4 @@
-import { generateId } from '@lrct/lib/utils';
+import { generateId, getCharacterPosition } from '@lrct/lib/utils';
 import { useMutation, useStorage } from '@lrct/lib/liveblocks';
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { Reply, Comment } from '../shared/types';
@@ -106,17 +106,15 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
       {textComments.map((comment: Comment) => {
         // Calculate position for comment indicator
         const textareaRect = textareaRef.current?.getBoundingClientRect();
-        if (!textareaRect) return null;
+        const textarea = textareaRef.current;
+        if (!textareaRect || !textarea || !comment.textSelection) return null;
 
-        // Simple approximation - position based on character count
-        // In a real implementation, you'd calculate exact text position
-        const textBefore = text.substring(0, comment.textSelection?.start);
-        const lineCount = (textBefore.match(/\n/g) || []).length;
-        const lineHeight = 20; // Approximate line height
-
-        // Adjust position for scroll offset
-        const top = textareaRect.top + 16 + (lineCount * lineHeight) - scrollOffset.y; // 16px for padding
-        const left = textareaRect.left + 16 - scrollOffset.x; // Simple left positioning
+        // Get precise character position
+        const charPosition = getCharacterPosition(textarea, text, comment.textSelection.start);
+        
+        // Calculate position relative to viewport
+        const top = textareaRect.top + charPosition.y - scrollOffset.y;
+        const left = textareaRect.left + charPosition.x - scrollOffset.x;
 
         // Check if comment is visible within textarea bounds
         const isVisible = top >= textareaRect.top &&
@@ -131,7 +129,7 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
             key={comment.id}
             className="absolute pointer-events-auto"
             style={{
-              left: left + (comment.position?.x || 0),
+              left: left,
               top: top,
               transform: "translateY(-50%)",
             }}

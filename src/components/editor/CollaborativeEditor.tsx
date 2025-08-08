@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useMutation, useStorage, useUpdateMyPresence } from '../../lib/liveblocks';
-import { generateId } from '../../lib/utils';
+import { generateId, getWordBounds } from '../../lib/utils';
 import { TextCursors } from '../cursors';
 import { Comment, CommentFormData } from '../shared/types';
 import { TextComments, CommentForm } from '../comments';
@@ -83,20 +83,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
       });
     }
   }, [updateMyPresence]);
-  const getWordBounds = useCallback((text: string, position: number) => {
-    const before = text.slice(0, position);
-    const after = text.slice(position);
 
-    const wordStart = before.search(/\S+$/);
-    const wordEnd = after.search(/\s/);
-
-    if (wordStart === -1) return null;
-
-    const start = wordStart === -1 ? position : before.length - before.length + wordStart;
-    const end = wordEnd === -1 ? text.length : position + wordEnd;
-
-    return { start, end };
-  }, []);
   // Handle double click for text comments
   const handleDoubleClick = useCallback((e: React.MouseEvent<HTMLTextAreaElement>) => {
     console.log('e: ', e);
@@ -135,7 +122,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
         setShowCommentForm(true);
       }
     }
-  }, [ text, getWordBounds]);
+  }, [text]);
 
   // Helper function to find word boundaries
 
@@ -176,7 +163,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
   }, [text, updateText]);
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col min-h-0">
       <div className="bg-gray-50 px-4 py-2 border-b">
         <h2 className="text-lg font-semibold text-gray-800">
           Collaborative Document
@@ -186,7 +173,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
         </p>
       </div>
 
-      <div className="flex-1 p-4 relative">
+      <div className="flex-1 p-4 relative min-h-0">
         <textarea
           id='collaborative-editor-textarea'
           ref={textareaRef}
@@ -197,7 +184,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
           onSelect={handleSelectionChange}
           onClick={handleSelectionChange}
           onDoubleClick={handleDoubleClick}
-          className="w-full h-full p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm bg-white text-gray-900 min-h-96"
+          className="w-full h-full p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm bg-white text-gray-900"
           placeholder="Start typing your document here..."
           spellCheck="false"
         />

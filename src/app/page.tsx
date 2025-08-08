@@ -34,7 +34,7 @@ function CollaborativeApp() {
   }, [updateMyPresence, user]);
 
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-screen bg-gray-100 flex flex-col overflow-hidden">
       {/* Header */}
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -62,16 +62,16 @@ function CollaborativeApp() {
       </header>
 
       {/* Main content */}
-      <main className="h-[calc(100vh-200px)] flex">
+      <main className="flex-1 flex flex-col lg:flex-row min-h-0 overflow-hidden">
         {/* Editor */}
-        <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200">
+        <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200 flex flex-col min-h-0">
           <CollaborativeEditor setTextareaRef={setTextareaRef} />
         </div>
 
         {/* Sidebar */}
-        <div className="w-80 bg-white m-4 ml-0 rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="w-auto lg:w-80 bg-white m-4 lg:ml-0 rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col min-h-0 overflow-hidden">
           <h3 className="font-semibold text-gray-800 mb-4">Features Demo</h3>
-          <div className="space-y-4 text-sm text-gray-600">
+          <div className="space-y-4 text-sm text-gray-600 overflow-y-auto flex-1">
             <div className="p-3 bg-blue-50 rounded-lg">
               <h4 className="font-medium text-blue-800 mb-1">🖱️ Live Cursors</h4>
               <p>Move your mouse to see real-time cursor tracking</p>
@@ -85,24 +85,24 @@ function CollaborativeApp() {
               <p>Double-click on any text in the editor to comment on it with threaded replies</p>
             </div>
             <div className="p-3 bg-purple-50 rounded-lg">
-              <h4 className="font-medium text-purple-800 mb-1">�️ Live Comments</h4>
+              <h4 className="font-medium text-purple-800 mb-1">💭 Live Comments</h4>
               <p>Double-click anywhere outside text to add general comments</p>
             </div>
             <div className="p-3 bg-indigo-50 rounded-lg">
-              <h4 className="font-medium text-indigo-800 mb-1">�👥 User Presence</h4>
+              <h4 className="font-medium text-indigo-800 mb-1">👥 User Presence</h4>
               <p>See who&apos;s online in the header</p>
             </div>
-          </div>
 
-          <div className="mt-1 p-3 bg-gray-50 rounded-lg">
-            <h4 className="font-medium text-gray-800 mb-2">🚀 Tech Stack</h4>
-            <ul className="text-xs text-gray-600 space-y-1">
-              <li>• Next.js 15 + TypeScript</li>
-              <li>• Liveblocks React SDK</li>
-              <li>• Real-time presence</li>
-              <li>• Collaborative storage</li>
-              <li>• Tailwind CSS</li>
-            </ul>
+            <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+              <h4 className="font-medium text-gray-800 mb-2">🚀 Tech Stack</h4>
+              <ul className="text-xs text-gray-600 space-y-1">
+                <li>• Next.js 15 + TypeScript</li>
+                <li>• Liveblocks React SDK</li>
+                <li>• Real-time presence</li>
+                <li>• Collaborative storage</li>
+                <li>• Tailwind CSS</li>
+              </ul>
+            </div>
           </div>
         </div>
       </main>
@@ -110,6 +110,30 @@ function CollaborativeApp() {
       {/* Live features */}
       <LiveCursors />
       <LiveComments textareaRef={textareaRef} />
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 px-6 py-3 mt-auto">
+        <div className="flex justify-center items-center text-sm text-gray-600">
+          <span>Created by</span>
+          <a
+            href="https://github.com/Galionix"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-1 text-blue-600 hover:text-blue-800 font-medium transition-colors"
+          >
+            Dmitry Halaktionov
+          </a>
+          <span className="mx-1">•</span>
+          <a
+            href="https://github.com/Galionix"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            @Galionix
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
