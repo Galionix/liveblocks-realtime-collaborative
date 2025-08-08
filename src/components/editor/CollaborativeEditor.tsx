@@ -17,7 +17,12 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
   const [isTyping, setIsTyping] = useState(false);
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [commentData, setCommentData] = useState<CommentFormData | null>(null);
-  const [currentUser] = useState(() => `User ${Math.floor(Math.random() * 1000)}`);
+  const [currentUser, setCurrentUser] = useState<string>("");
+
+  // Initialize user on client side only
+  useEffect(() => {
+    setCurrentUser(`User ${Math.floor(Math.random() * 1000)}`);
+  }, []);
 
   // Get the current text from Liveblocks storage
   const text = useStorage((root) => root.text);
@@ -137,7 +142,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
 
   // Handle adding comment
   const handleAddComment = useCallback((commentText: string) => {
-    if (!commentText.trim() || !commentData) return;
+    if (!commentText.trim() || !commentData || !currentUser) return;
 
     const comment = {
       id: generateId(),
@@ -171,7 +176,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
   }, [text, updateText]);
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col h-full">
       <div className="bg-gray-50 px-4 py-2 border-b">
         <h2 className="text-lg font-semibold text-gray-800">
           Collaborative Document
@@ -183,6 +188,7 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
 
       <div className="flex-1 p-4 relative">
         <textarea
+          id='collaborative-editor-textarea'
           ref={textareaRef}
           value={text || ""}
           onChange={handleTextChange}
@@ -208,7 +214,6 @@ export function CollaborativeEditor({ setTextareaRef }: { setTextareaRef: (ref: 
       </div>
 
       <TextComments textareaRef={textareaRef} removeTextComment={removeTextComment} />
-      {/* <TypingIndicators /> */}
     </div>
   );
 }

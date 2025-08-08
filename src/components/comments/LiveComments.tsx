@@ -15,8 +15,13 @@ export function LiveComments({ textareaRef }: LiveCommentsProps = {}) {
   const [isAddingComment, setIsAddingComment] = useState(false);
   const [commentPosition, setCommentPosition] = useState<{ x: number; y: number } | null>(null);
   const [newCommentText, setNewCommentText] = useState("");
-  const [currentUser] = useState(() => `User ${Math.floor(Math.random() * 1000)}`);
+  const [currentUser, setCurrentUser] = useState<string>("");
   const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
+
+  // Initialize user on client side only
+  useEffect(() => {
+    setCurrentUser(`User ${Math.floor(Math.random() * 1000)}`);
+  }, []);
 
   // Get comments from storage
   const comments = useStorage((root) => root.comments);
@@ -70,7 +75,7 @@ export function LiveComments({ textareaRef }: LiveCommentsProps = {}) {
   }, []);
 
   const handleAddComment = useCallback(() => {
-    if (newCommentText.trim() && commentPosition) {
+    if (newCommentText.trim() && commentPosition && currentUser) {
       const comment: Comment = {
         id: generateId(),
         text: newCommentText.trim(),

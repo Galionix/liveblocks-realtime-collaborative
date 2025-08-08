@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Comment, Reply } from '../shared/types';
-import { generateId } from '../../lib/utils';
+import { generateId } from '@lrct/lib/utils';
 
 export const CommentBubble = ({
   comment,

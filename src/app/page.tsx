@@ -11,18 +11,26 @@ import { getRandomColor, getRandomUserName } from '../lib/utils';
 
 function CollaborativeApp() {
   const updateMyPresence = useUpdateMyPresence();
-  const [user] = useState(() => ({
-    name: getRandomUserName(),
-    color: getRandomColor(),
-  }));
+  const [user, setUser] = useState<{ name: string; color: string } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  // Initialize user on client side only
+  useEffect(() => {
+    setUser({
+      name: getRandomUserName(),
+      color: getRandomColor(),
+    });
+  }, []);
 
   const setTextareaRef = (ref: HTMLTextAreaElement | null) => {
     textareaRef.current = ref;
   };
+
   useEffect(() => {
     // Set user info in presence
-    updateMyPresence({ user });
+    if (user) {
+      updateMyPresence({ user });
+    }
   }, [updateMyPresence, user]);
 
   return (
@@ -40,9 +48,13 @@ function CollaborativeApp() {
           </div>
           <div className="flex items-center space-x-4">
             <div className="text-sm text-gray-500">
-              You are: <span className="font-medium" style={{ color: user.color }}>
-                {user.name}
-              </span>
+              You are: {user ? (
+                <span className="font-medium" style={{ color: user.color }}>
+                  {user.name}
+                </span>
+              ) : (
+                <span className="font-medium">Loading...</span>
+              )}
             </div>
             <UserPresence />
           </div>
@@ -82,7 +94,7 @@ function CollaborativeApp() {
             </div>
           </div>
 
-          <div className="mt-6 p-3 bg-gray-50 rounded-lg">
+          <div className="mt-1 p-3 bg-gray-50 rounded-lg">
             <h4 className="font-medium text-gray-800 mb-2">🚀 Tech Stack</h4>
             <ul className="text-xs text-gray-600 space-y-1">
               <li>• Next.js 15 + TypeScript</li>

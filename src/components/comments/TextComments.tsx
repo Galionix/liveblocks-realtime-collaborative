@@ -1,5 +1,5 @@
-import { generateId } from '../../lib/utils';
-import { useMutation, useStorage } from '../../lib/liveblocks';
+import { generateId } from '@lrct/lib/utils';
+import { useMutation, useStorage } from '@lrct/lib/liveblocks';
 import { useCallback, useState, useEffect, useRef } from 'react';
 import { Reply, Comment } from '../shared/types';
 
@@ -10,9 +10,14 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
   const text = useStorage((root) => root.text) || "";
   const [expandedComment, setExpandedComment] = useState<string | null>(null);
   const [replyText, setReplyText] = useState("");
-  const [currentUser] = useState(() => `User ${Math.floor(Math.random() * 1000)}`);
+  const [currentUser, setCurrentUser] = useState<string>("");
   const [scrollOffset, setScrollOffset] = useState({ x: 0, y: 0 });
   const popupRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  // Initialize user on client side only
+  useEffect(() => {
+    setCurrentUser(`User ${Math.floor(Math.random() * 1000)}`);
+  }, []);
 
   // Listen for textarea scroll events
   useEffect(() => {
@@ -77,7 +82,7 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
   }, []);
 
   const handleAddReply = useCallback((commentId: string) => {
-    if (replyText.trim()) {
+    if (replyText.trim() && currentUser) {
       addReply(commentId, {
         id: generateId(),
         text: replyText.trim(),
@@ -202,7 +207,8 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
                     <button
                       onClick={() => {
                         removeTextComment(comment.id);
-                        setExpandedComment(null);}}
+                        setExpandedComment(null);
+                      }}
                       className="px-2 py-1 text-xs text-gray-600 hover:text-gray-800"
                     >
                       Delete
