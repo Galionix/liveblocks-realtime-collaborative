@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 import { useOthers } from '../../lib/liveblocks';
 
@@ -11,9 +11,39 @@ interface TextCursorsProps {
 
 export function TextCursors({ textareaRef, text }: TextCursorsProps) {
   const others = useOthers();
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // Track scroll position changes to update cursor positions
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const handleScroll = () => {
+      // Trigger re-render by updating refresh key
+      setRefreshKey(prev => prev + 1);
+    };
+
+    // Throttle scroll events for better performance
+    let timeoutId: NodeJS.Timeout;
+    const throttledHandleScroll = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(handleScroll, 16); // ~60fps
+    };
+
+    textarea.addEventListener('scroll', throttledHandleScroll);
+
+    return () => {
+      textarea.removeEventListener('scroll', throttledHandleScroll);
+      clearTimeout(timeoutId);
+    };
+  }, [textareaRef]);
 
   const textCursors = useMemo(() => {
     if (!textareaRef.current || !text) return [];
+
+    // Force recalculation on scroll (refreshKey is used as dependency)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _ = refreshKey;
 
     return others
       .filter((other) => other.presence.textCursor && other.presence.user)
@@ -44,7 +74,7 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
 
         return isVisible;
       });
-  }, [others, textareaRef, text]); // добавляем scrollState в зависимости
+  }, [others, textareaRef, text, refreshKey]);
 
   return (
     <>
@@ -119,8 +149,10 @@ function getTextareaCoordinates(
     const fontSize = parseFloat(computedStyle.fontSize);
     const lineHeight = parseFloat(computedStyle.lineHeight) || fontSize * 1.2;
 
-    // Calculate Y position (line number * line height) - scroll offset + half line height for vertical centering
-    const y = textareaRect.top + paddingTop + (currentLineIndex * lineHeight) - scrollTop;
+    // Calculate Y position relative to textarea content, then add textarea position
+    // Учитываем скролл и добавляем немного отступа для центрирования курсора на строке
+    const relativeY = (currentLineIndex * lineHeight) - scrollTop + (lineHeight * 0.1);
+    const y = textareaRect.top + paddingTop + relativeY;
 
     // Calculate X position using canvas for accurate text measurement
     const canvas = document.createElement('canvas');
@@ -133,6 +165,15 @@ function getTextareaCoordinates(
     // Measure width of current line text
     const textWidth = ctx.measureText(currentLineText).width;
     const x = textareaRect.left + paddingLeft + textWidth - scrollLeft;
+
+    // Проверяем, что позиция находится в пределах видимой области textarea
+    const minY = textareaRect.top + paddingTop;
+    const maxY = textareaRect.bottom - paddingTop;
+
+    // Если курсор вне видимой области, возвращаем null
+    if (y < minY || y > maxY) {
+      return { x: null, y: null };
+    }
 
     return { x, y };
   } catch (error) {
