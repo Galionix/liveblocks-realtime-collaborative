@@ -239,9 +239,10 @@ export function RoomSelector({ onRoomSelect, currentRoomId, isExpanded, onToggle
                   Active
                 </span>
               </div>
-              {currentRoom?.description && (
-                <p className="text-sm text-gray-600 mt-1">{currentRoom.description}</p>
-              )}
+              <p className="text-sm text-gray-600 mt-1">{currentRoom?.description ? (
+                currentRoom.description
+              ) : 'Loading'}</p>
+
             </div>
 
             {/* Toggle button */}
