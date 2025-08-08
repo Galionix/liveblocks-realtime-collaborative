@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { useOthers } from '../lib/liveblocks';
+import { useOthers } from '../../lib/liveblocks';
 
 interface TextCursorsProps {
   textareaRef: React.RefObject<HTMLTextAreaElement | null>;
@@ -11,24 +11,6 @@ interface TextCursorsProps {
 
 export function TextCursors({ textareaRef, text }: TextCursorsProps) {
   const others = useOthers();
-  const [scrollState, setScrollState] = useState({ scrollTop: 0, scrollLeft: 0 });
-
-  // Listen for scroll events
-  const textareaElement = textareaRef.current;
-
-  useEffect(() => {
-    if (!textareaElement) return;
-
-    const handleScroll = () => {
-      setScrollState({
-        scrollTop: textareaElement.scrollTop,
-        scrollLeft: textareaElement.scrollLeft,
-      });
-    };
-
-    textareaElement.addEventListener('scroll', handleScroll);
-    return () => textareaElement.removeEventListener('scroll', handleScroll);
-  }, [textareaElement]);
 
   const textCursors = useMemo(() => {
     if (!textareaRef.current || !text) return [];
@@ -62,7 +44,7 @@ export function TextCursors({ textareaRef, text }: TextCursorsProps) {
 
         return isVisible;
       });
-  }, [others, textareaRef, text, scrollState]); // добавляем scrollState в зависимости
+  }, [others, textareaRef, text]); // добавляем scrollState в зависимости
 
   return (
     <>

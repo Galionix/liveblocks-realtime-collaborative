@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { useOthersMapped, useUpdateMyPresence } from '../lib/liveblocks';
+import { useOthersMapped, useUpdateMyPresence } from '../../lib/liveblocks';
 
 type Cursor = {
   x: number;
@@ -15,7 +15,6 @@ type Cursor = {
 
 export function LiveCursors() {
   const updateMyPresence = useUpdateMyPresence();
-  const [localCursor, setLocalCursor] = useState<{ x: number; y: number } | null>(null);
 
   // Get other users' cursors
   const others = useOthersMapped((other) => ({
@@ -36,12 +35,10 @@ export function LiveCursors() {
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
       const cursor = { x: e.clientX, y: e.clientY };
-      setLocalCursor(cursor);
       updateMyPresence({ cursor });
     };
 
     const handlePointerLeave = () => {
-      setLocalCursor(null);
       updateMyPresence({ cursor: null });
     };
 

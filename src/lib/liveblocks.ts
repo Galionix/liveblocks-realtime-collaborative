@@ -1,5 +1,6 @@
 import { createClient } from '@liveblocks/client';
 import { createRoomContext } from '@liveblocks/react';
+import { Comment } from '../components/shared/types';
 
 // Initialize the Liveblocks client
 const client = createClient({
@@ -21,19 +22,7 @@ type Storage = {
   // Document text content
   text: string;
   // Comments data
-  comments: Record<string, {
-    id: string;
-    text: string;
-    author: string;
-    timestamp: number;
-    position?: { x: number; y: number };
-    replies?: Array<{
-      id: string;
-      text: string;
-      author: string;
-      timestamp: number;
-    }>;
-  }>;
+  comments: Record<string, Comment>;
 };
 
 // Create the room context

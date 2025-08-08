@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { CollaborativeEditor } from '../components/CollaborativeEditor';
-import { LiveComments } from '../components/LiveComments';
-import { LiveCursors } from '../components/LiveCursors';
-import { UserPresence } from '../components/UserPresence';
+import { CollaborativeEditor } from '../components/editor';
+import { LiveComments } from '../components/comments';
+import { LiveCursors } from '../components/cursors';
+import { UserPresence } from '../components/presence';
 import { RoomProvider, useUpdateMyPresence } from '../lib/liveblocks';
 import { getRandomColor, getRandomUserName } from '../lib/utils';
 
@@ -15,7 +15,11 @@ function CollaborativeApp() {
     name: getRandomUserName(),
     color: getRandomColor(),
   }));
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
+  const setTextareaRef = (ref: HTMLTextAreaElement | null) => {
+    textareaRef.current = ref;
+  };
   useEffect(() => {
     // Set user info in presence
     updateMyPresence({ user });
@@ -49,7 +53,7 @@ function CollaborativeApp() {
       <main className="h-[calc(100vh-200px)] flex">
         {/* Editor */}
         <div className="flex-1 bg-white m-4 rounded-lg shadow-sm border border-gray-200">
-          <CollaborativeEditor />
+          <CollaborativeEditor setTextareaRef={setTextareaRef} />
         </div>
 
         {/* Sidebar */}
@@ -74,7 +78,7 @@ function CollaborativeApp() {
             </div>
             <div className="p-3 bg-indigo-50 rounded-lg">
               <h4 className="font-medium text-indigo-800 mb-1">�👥 User Presence</h4>
-              <p>See who's online in the header</p>
+              <p>See who&apos;s online in the header</p>
             </div>
           </div>
 
@@ -93,7 +97,7 @@ function CollaborativeApp() {
 
       {/* Live features */}
       <LiveCursors />
-      <LiveComments />
+      <LiveComments textareaRef={textareaRef} />
     </div>
   );
 }

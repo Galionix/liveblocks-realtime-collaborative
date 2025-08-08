@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 
-import { useMyPresence, useOthers } from '../lib/liveblocks';
+import { useMyPresence, useOthers } from '../../lib/liveblocks';
 
 export function UserPresence() {
   const [myPresence] = useMyPresence();
