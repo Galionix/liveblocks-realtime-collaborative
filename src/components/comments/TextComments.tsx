@@ -111,7 +111,7 @@ export const TextComments = ({ textareaRef, removeTextComment }: {
 
         // Get precise character position
         const charPosition = getCharacterPosition(textarea, text, comment.textSelection.start);
-        
+
         // Calculate position relative to viewport
         const top = textareaRect.top + charPosition.y - scrollOffset.y;
         const left = textareaRect.left + charPosition.x - scrollOffset.x;

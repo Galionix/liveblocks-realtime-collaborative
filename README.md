@@ -8,6 +8,7 @@ A demonstration of real-time collaboration features using Liveblocks React SDK. 
 1. **Real-time Presence System** - Live cursors and user awareness indicators
 2. **Collaborative Text Editing** - Real-time text synchronization with conflict resolution
 3. **Live Comments** - Contextual commenting with threaded discussions
+4. **Multi-Room Support** - Create and switch between different documents
 
 ### 🛠️ Tech Stack:
 - **Frontend**: Next.js 15 + TypeScript + Tailwind CSS
@@ -69,14 +70,21 @@ A demonstration of real-time collaboration features using Liveblocks React SDK. 
 - Color-coded user identification
 - Real-time join/leave notifications
 
+### 📁 Multi-Room Support
+- **Create new documents** using the "+ New" button
+- **Switch between documents** from the document selector
+- **Delete documents** with the trash icon (hover to reveal)
+- **Persistent document list** stored in browser localStorage
+- Each document has its own isolated collaboration space
+
 ## 🏗️ Architecture
 
 ### Liveblocks Integration:
 ```typescript
-// Room-based architecture
-- Room ID: "collaborative-demo-room"
+// Dynamic room-based architecture
+- Room ID: dynamically selected from room list
 - Presence: { cursor, isTyping, user }
-- Storage: { text, comments }
+- Storage: { text, comments } per room
 ```
 
 ### Real-time Patterns:
@@ -96,21 +104,25 @@ A demonstration of real-time collaboration features using Liveblocks React SDK. 
 ### Project Structure:
 ```
 src/
-├── app/page.tsx              # Main application page
+├── app/page.tsx              # Main application page with room management
 ├── lib/
 │   ├── liveblocks.ts         # Liveblocks configuration
 │   └── utils.ts              # Utility functions
 └── components/
-    ├── LiveCursors.tsx       # Real-time cursor tracking
-    ├── UserPresence.tsx      # Online user indicators
-    ├── CollaborativeEditor.tsx # Text editor with sync
-    └── LiveComments.tsx      # Comment system
+    ├── rooms/
+    │   └── RoomSelector.tsx   # Document/room selection interface
+    ├── editor/
+    │   └── CollaborativeEditor.tsx # Text editor with sync
+    ├── comments/              # Comment system components
+    ├── cursors/               # Live cursor components
+    └── presence/              # User presence components
 ```
 
 ### Key Files:
 - **`liveblocks.ts`**: Client setup and TypeScript types
-- **`page.tsx`**: RoomProvider wrapper and main UI
-- **Components**: Modular real-time features
+- **`page.tsx`**: RoomProvider wrapper, room management, and main UI
+- **`RoomSelector.tsx`**: Document creation and selection interface
+- **Components**: Modular real-time features organized by functionality
 
 ## 🚀 Deployment
 
@@ -132,6 +144,7 @@ npm run build
 3. **Test editing**: Type simultaneously in text editor
 4. **Test comments**: Double-click to add comments in different windows
 5. **Test presence**: Open/close windows to see user join/leave
+6. **Test rooms**: Create new documents and switch between them
 
 ## ⚡ Performance Considerations
 
@@ -158,9 +171,10 @@ For production use, consider:
 ## 🤝 System Design Notes
 
 ### Room Architecture:
-- **Single room per document** approach for simplicity
-- Could scale to **dynamic room creation** for multiple documents
-- **Presence data** separated from **persistent storage**
+- **Dynamic room creation** for multiple documents
+- **Isolated collaboration spaces** per document
+- **Persistent room list** in browser localStorage
+- **Presence data** separated from **persistent storage** per room
 
 ### Conflict Resolution Strategy:
 - **CRDT-based** automatic merging (Liveblocks handles this)
@@ -168,9 +182,9 @@ For production use, consider:
 - **Operational transforms** for text editing
 
 ### Trade-offs Made:
-- **Simplicity over features** due to 24-hour constraint
-- **In-memory comments** instead of persistent database
+- **Simplicity over advanced features** for clear demonstration
+- **localStorage rooms** instead of server-side room management
 - **Basic user system** instead of full authentication
-- **Single room** instead of multi-document support
+- **Client-side room storage** instead of persistent database
 
 This demonstrates core real-time collaboration patterns while keeping the implementation focused and understandable.

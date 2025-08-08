@@ -38,8 +38,8 @@ export function getRandomUserName(): string {
  * @returns Object with x and y coordinates relative to textarea
  */
 export function getCharacterPosition(
-  textarea: HTMLTextAreaElement, 
-  text: string, 
+  textarea: HTMLTextAreaElement,
+  text: string,
   charIndex: number
 ): { x: number; y: number } {
   const computedStyle = window.getComputedStyle(textarea);
@@ -59,7 +59,7 @@ export function getCharacterPosition(
   if (context) {
     context.font = `${fontSize}px ${computedStyle.fontFamily}`;
     const textWidth = context.measureText(lines[lineIndex]).width;
-    
+
     return {
       x: paddingLeft + textWidth,
       y: paddingTop + (lineIndex * lineHeight)

@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure textarea text is always black */
+textarea {
+  color: #000000 !important;
+}
+
+/* Ensure input text is also black */
+input[type="text"], input[type="email"], input[type="password"] {
+  color: #000000 !important;
+}
