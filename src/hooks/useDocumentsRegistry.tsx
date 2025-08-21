@@ -28,7 +28,6 @@ type RegistryPresence = {
     color: string;
   };
 };
-
 type RegistryStorage = {
   documents: LiveMap<string, DocumentMetadata>;
 };

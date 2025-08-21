@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 
-import { CollaborativeEditor } from '../../../components/editor';
-import { LiveComments } from '../../../components/comments';
-import { LiveCursors } from '../../../components/cursors';
-import { UserPresence } from '../../../components/presence';
-import { RoomSelector } from '../../../components/rooms';
-import { RoomProvider, useUpdateMyPresence } from '../../../lib/liveblocks';
-import { getRandomColor, getRandomUserName } from '../../../lib/utils';
+import { CollaborativeEditor } from '@lrct/components/editor';
+import { LiveComments } from '@lrct/components/comments';
+import { LiveCursors } from '@lrct/components/cursors';
+import { UserPresence } from '@lrct/components/presence';
+import { RoomSelector } from '@lrct/components/rooms';
+import { RoomProvider, useUpdateMyPresence } from '@lrct/lib/liveblocks';
+import { getRandomColor, getRandomUserName } from '@lrct/lib/utils';
 
 function CollaborativeApp() {
   const updateMyPresence = useUpdateMyPresence();
